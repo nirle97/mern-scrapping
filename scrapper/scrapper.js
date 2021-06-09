@@ -107,7 +107,7 @@ const getPastes = async () => {
             console.error(e.message);
           } else {
             if (!exists) {
-              PasteModel.insertOne(paste)
+              PasteModel.create(paste)
                 .then(() => console.log("one paste was added to mongodb"))
                 .catch((e) => console.error(e.message));
             } else {
