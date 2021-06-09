@@ -99,7 +99,6 @@ const getPastes = async () => {
       let breakLoop = false;
       for (let paste of dbData) {
         if (breakLoop) {
-          console.log("breaking out of the loop");
           break;
         }
         PasteModel.exists({ date: paste.date }, function (e, exists) {

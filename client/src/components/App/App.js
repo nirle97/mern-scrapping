@@ -11,11 +11,10 @@ function App() {
   const [, setAllPastes] = pastesContext.fetchedPasted;
   const [, setPastesToShow] = pastesContext.toShowPastes;
   const [chartsData, setChartsData] = useState({});
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const getPastes = async () => {
     try {
-      setLoading(true);
       const { data: pastes } = await axios.get("http://localhost:8080/pastes");
       setAllPastes(pastes);
       setPastesToShow(pastes);
@@ -34,7 +33,7 @@ function App() {
     const interavl = setInterval(() => {
       console.log("fetching pastes");
       getPastes();
-    }, 864000);
+    }, 86400);
     return () => clearInterval(interavl);
   }, []);
 

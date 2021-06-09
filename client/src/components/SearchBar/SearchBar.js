@@ -23,7 +23,6 @@ export default function SearchBar() {
       if (!results.length) {
         setIsSearchResults(true);
       } else {
-        console.log(12);
         setPastesToShow(results);
         setIsSearchResults(false);
       }

@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const pastes = Router();
 const PasteModel = require("../mongo");
+
 pastes.get("/", (req, res) => {
   PasteModel.find()
     .then((pastes) => {
@@ -8,8 +9,8 @@ pastes.get("/", (req, res) => {
     })
     .catch((e) => res.status(400).send(e.message));
 });
-pastes.get("/test", (req, res) => {
-  res.status(200).send("Go To: /pastes");
+pastes.post("/new-scrape/:amount", (req, res) => {
+  const newPastes = req.params.amount;
 });
 
 module.exports = pastes;

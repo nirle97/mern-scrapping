@@ -1,11 +1,15 @@
 const express = require("express");
 const app = express();
+const server = require("http").createServer(app);
+const io = require("socket.io")(server, { cors: { origin: "*" } });
 const pastes = require("./routes/pastes");
 const analytics = require("./routes/analytics");
 const mongoose = require("mongoose");
 app.use("/pastes", pastes);
 app.use("/analytics", analytics);
-
+app.get("/", (req, res) => {
+  res.send("hello");
+});
 mongoose
   .connect("mongodb://mongodb:27017/pastes", {
     useNewUrlParser: true,
@@ -17,8 +21,8 @@ mongoose
     console.log(`server connected to MongoDB`);
   })
   .catch((error) => {
-    console.log("error connecting to MongoDB:", error.message);
+    console.error("error connecting to MongoDB: ", error.message);
   });
-app.listen(8080, () => console.log("app listening on port 8080"));
+server.listen(8080, () => console.log("app is listening on port 8080"));
 
 module.exports = app;
