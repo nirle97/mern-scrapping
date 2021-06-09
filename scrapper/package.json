@@ -14,7 +14,8 @@
     "mongoose": "^5.12.13",
     "node-schedule": "^2.0.0",
     "puppeteer": "^10.0.0",
-    "socket.io": "^4.1.2"
+    "socket.io": "^4.1.2",
+    "socket.io-client": "^4.1.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"

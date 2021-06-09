@@ -1,8 +1,11 @@
 const puppeteer = require("puppeteer");
 const cheerio = require("cheerio");
-const PasteModel = require("./mongo");
+const PasteModel = require("./src/mongo");
+const Pastes = require("./src/pasteClass");
 const schedule = require("node-schedule");
 const mongoose = require("mongoose");
+const socketClient = require("socket.io-client");
+const baseUrl = "http://localhost:8080";
 let firstTime = true;
 
 mongoose
@@ -18,114 +21,18 @@ mongoose
   .catch((error) => {
     console.log("error connecting scrapper to MongoDB:", error.message);
   });
-class Pastes {
-  getTitles(page) {
-    const titles = [];
-    page("h4").each((i, elem) => {
-      const title = page(elem).text().replace(/\s\s+/g, "");
-      titles.push(title);
-    });
-    return titles;
-  }
-  getContents(page) {
-    const contents = [];
-    page(".row div.well ol").each((i, elem) => {
-      contents.push(page(elem));
-    });
-    const listOfLines = contents.map((list) => {
-      let listText = "";
-      page(list).each((i, li) => {
-        const line = page(li).text().replace(/\s\s+/g, "");
-        listText = line;
-      });
-      contents.push(listText);
-      return listText;
-    });
-    return listOfLines;
-  }
-  getAuthors(page) {
-    const authors = [];
-    page(".pre-info").each((i, elem) => {
-      let info = page(elem).text().replace(/\s\s+/g, "");
-      if (info.includes("Posted by")) {
-        let author = info.substring(
-          info.indexOf("Posted") + 10,
-          info.indexOf("at")
-        );
-        authors.push(author);
-      }
-    });
-    return authors;
-  }
 
-  getDates(page) {
-    const dates = [];
-    page(".pre-info").each((i, elem) => {
-      let info = page(elem).text().replace(/\s\s+/g, "");
-      if (info.includes("Posted by")) {
-        let divDate = info.substring(
-          info.indexOf("at") + 3,
-          info.lastIndexOf("UTC") - 1
-        );
-        dates.push(divDate);
-      }
-    });
-    return dates;
-  }
-}
-
-const getPastes = async () => {
-  try {
-    const browser = await puppeteer.launch({
-      ignoreHTTPSErrors: true,
-      args: [
-        "--proxy-server=socks5://host.docker.internal:9050",
-        "--disable-setuid-sandbox",
-        "--no-sandbox",
-        "--link scrape-network:scrape-network",
-      ],
-    });
-    const page = await browser.newPage();
-    const dbData = await scrapePage(page);
-    browser.close();
-    if (firstTime) {
-      PasteModel.insertMany(dbData)
-        .then(() => {
-          firstTime = false;
-          console.log("data inserted to mongodb");
-        })
-        .catch((e) => console.error(e.message));
-    } else {
-      let breakLoop = false;
-      for (let paste of dbData) {
-        if (breakLoop) {
-          break;
-        }
-        PasteModel.exists({ date: paste.date }, function (e, exists) {
-          if (e) {
-            console.error(e.message);
-          } else {
-            if (!exists) {
-              PasteModel.create(paste)
-                .then(() => console.log("one paste was added to mongodb"))
-                .catch((e) => console.error(e.message));
-            } else {
-              breakLoop = true;
-            }
-          }
-        });
-      }
-    }
-  } catch (e) {
-    console.error(e.message);
-  }
-};
-schedule.scheduleJob("*/120 * * * * *", function () {
-  console.log("Gathering Pastes..");
-  getPastes();
-});
-
-async function scrapePage(page) {
+async function scrapePage() {
+  const browser = await puppeteer.launch({
+    ignoreHTTPSErrors: true,
+    args: [
+      "--proxy-server=socks5://host.docker.internal:9050",
+      "--disable-setuid-sandbox",
+      "--no-sandbox",
+      "--link scrape-network:scrape-network",
+    ],
+  });
+  const page = await browser.newPage();
   const data = new Pastes();
   const dbData = [];
   let pageNumber = 1;
@@ -154,5 +61,47 @@ async function scrapePage(page) {
     }
     pageNumber++;
   }
+  browser.close();
   return dbData;
 }
+
+const savePastes = async () => {
+  try {
+    const dbData = await scrapePage();
+    if (firstTime) {
+      PasteModel.insertMany(dbData)
+        .then(() => {
+          firstTime = false;
+          console.log("data inserted to mongodb");
+        })
+        .catch((e) => console.error(e.message));
+    } else {
+      let breakLoop = false;
+      for (let paste of dbData) {
+        if (breakLoop) {
+          break;
+        }
+        PasteModel.exists({ date: paste.date }, function (err, exists) {
+          if (err) {
+            console.error(err.message);
+          } else {
+            if (!exists) {
+              PasteModel.create(paste)
+                .then(() => console.log("one paste was added to mongodb"))
+                .catch((e) => console.error(e.message));
+            } else {
+              breakLoop = true;
+            }
+          }
+        });
+      }
+    }
+  } catch (e) {
+    console.error(e.message);
+  }
+};
+
+schedule.scheduleJob("*/120 * * * * *", function () {
+  console.log("Gathering Pastes..");
+  savePastes();
+});

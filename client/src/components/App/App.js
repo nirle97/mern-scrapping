@@ -3,9 +3,10 @@ import { useContext, useEffect, useState } from "react";
 import Table from "../Table/Table";
 import SearchBar from "../SearchBar/SearchBar";
 import Chart from "../Chart/Chart";
+import Alert from "../Alert/Alert";
 import axios from "axios";
 import { AppContext } from "../../AppContext";
-
+const baseUrl = "http://localhost:8080";
 function App() {
   const { pastesContext } = useContext(AppContext);
   const [, setAllPastes] = pastesContext.fetchedPasted;
@@ -13,26 +14,24 @@ function App() {
   const [chartsData, setChartsData] = useState({});
   const [loading, setLoading] = useState(true);
 
-  const getPastes = async () => {
+  const getPastesData = async () => {
     try {
-      const { data: pastes } = await axios.get("http://localhost:8080/pastes");
+      const { data: pastes } = await axios.get(`${baseUrl}/pastes`);
       setAllPastes(pastes);
       setPastesToShow(pastes);
-      setLoading(false);
-      const { data: analyticsData } = await axios.get(
-        "http://localhost:8080/analytics"
-      );
+      const { data: analyticsData } = await axios.get(`${baseUrl}/analytics`);
       setChartsData(analyticsData);
+      setLoading(false);
     } catch (e) {
       console.error(e.message);
     }
   };
 
-  useEffect(() => {
-    getPastes();
+  useEffect(async () => {
+    await getPastesData();
     const interavl = setInterval(() => {
-      console.log("fetching pastes");
-      getPastes();
+      console.log("Fetching Pastes");
+      getPastesData();
     }, 86400);
     return () => clearInterval(interavl);
   }, []);
@@ -46,6 +45,7 @@ function App() {
       ) : (
         <div className="App">
           <>
+            <Alert />
             <Chart chartsData={chartsData} />
             <SearchBar />
             <Table />
