@@ -1,0 +1,32 @@
+.Table-container {
+  max-width: 80vw;
+  max-height: 70vh;
+  overflow-y: scroll;
+}
+.Table-table {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.Table-no-res {
+  color: white;
+  font-size: 30px;
+}
+.Table-container::-webkit-scrollbar {
+  width: 0.25rem;
+}
+.Table-container::-webkit-scrollbar-track {
+  background: #1e1e24;
+}
+.Table-container::-webkit-scrollbar-thumb {
+  background: rgb(144, 202, 249);
+}
+.Table-table thead {
+  color: rgb(144, 202, 249);
+}
+.Table-show-more-btn {
+  margin-right: 1vw;
+}
+.Table-show-all-btn {
+  margin-right: 1vw;
+}

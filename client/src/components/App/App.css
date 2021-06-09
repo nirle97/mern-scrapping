@@ -1,0 +1,23 @@
+.App-spinner {
+  position: absolute;
+  background-color: rgb(241, 242, 243);
+  width: 100%;
+  height: 100%;
+}
+.App-spinner img {
+  position: absolute;
+  top: 35%;
+  left: 45%;
+}
+.App {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(18, 18, 18);
+  background-attachment: fixed;
+  width: 100vw;
+  height: 100vh;
+  overflow-y: scroll;
+}

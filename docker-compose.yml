@@ -1,0 +1,69 @@
+version: "3.2"
+
+services:
+  tor-browser:
+    image: dperson/torproxy
+    container_name: tor-browser
+    ports:
+      - "8118:8118"
+      - "9050:9050"
+    networks:
+      - scrape-network
+  react-app:
+    container_name: react-app
+    image: react-image
+    build:
+      context: ./client
+      dockerfile: client.Dockerfile
+    stdin_open: true
+    ports:
+      - 3000:3000
+    networks:
+      - scrape-network
+
+  server-node:
+    container_name: server-container
+    image: node-image
+    build:
+      context: ./server
+      dockerfile: server.Dockerfile
+    command: "npm run dev"
+    ports:
+      - "8080:8080"
+    links:
+      - mongodb
+    depends_on:
+      - mongodb
+    networks:
+      - scrape-network
+
+  scrapper:
+    container_name: scrapper-container
+    image: scrapper-image
+    build:
+      context: ./scrapper
+      dockerfile: scrape.Dockerfile
+    ports:
+      - "8081:8081"
+    links:
+      - mongodb
+    depends_on:
+      - tor-browser
+    networks:
+      - scrape-network
+
+  mongodb:
+    container_name: mongodb
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    volumes:
+      - data:/data/db
+    networks:
+      - scrape-network
+
+volumes:
+  data:
+networks:
+  scrape-network:
+    driver: bridge
