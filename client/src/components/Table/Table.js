@@ -3,20 +3,21 @@ import { useState, useRef, useContext } from "react";
 import * as reactBts from "react-bootstrap";
 import { AppContext } from "../../AppContext";
 import Paste from "../Paste/Paste";
+
 function Table() {
   const { pastesContext, searchResults } = useContext(AppContext);
   const [numberOfPastesToShow, setNumberOfPastesToShow] = useState(5);
   const [isSearchResults] = searchResults;
-  const [pastesToShow] = pastesContext.toShowPastes;
-  const scrollDown = useRef();
+  const [pastesToShow, setPastesToShow] = pastesContext.toShowPastes;
+
   const showMorePastes = (e) => {
     if (numberOfPastesToShow >= pastesToShow.length) {
       e.target.disabled = true;
       return;
     }
     setNumberOfPastesToShow((prev) => prev + 5);
-    scrollDown.current.scrollIntoView({ behavior: "smooth" });
   };
+
   return (
     <div className="Table-container">
       {isSearchResults ? (
@@ -67,8 +68,6 @@ function Table() {
             >
               show less
             </reactBts.Button>
-
-            <div ref={scrollDown}></div>
           </div>
         </>
       )}

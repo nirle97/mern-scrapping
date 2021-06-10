@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import useDebounce from "./use-debounce";
 import { AppContext } from "../../AppContext";
 import * as reactBts from "react-bootstrap";
@@ -7,27 +7,44 @@ import "./searchBar.css";
 export default function SearchBar() {
   const { pastesContext, searchResults } = useContext(AppContext);
   const [pastesToShow, setPastesToShow] = pastesContext.toShowPastes;
-  const [allPastes] = pastesContext.fetchedPasted;
+  const [allPastes, setAllPastes] = pastesContext.fetchedPasted;
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounce(searchTerm, 1000);
   const [, setIsSearchResults] = searchResults;
-  const searchCharacters = () => {
-    return [...pastesToShow].filter((paste) =>
-      paste.title.toLowerCase().includes(debouncedSearchTerm)
-    );
+  const searchTypeBtn = useRef();
+  const searchCharacters = (type, text) => {
+    return [...pastesToShow].filter((paste) => {
+      if (type === "number") {
+        console.log(paste.number);
+        if (paste.number === text) return true;
+      } else {
+        paste.title.toLowerCase().includes(text);
+      }
+    });
   };
-
+  const changeSearchType = () => {
+    const btn = searchTypeBtn.current;
+    if (btn.id) {
+      btn.id = "";
+      btn.value = 0;
+    } else {
+      btn.id = "SearchBar-btn";
+      btn.value = 1;
+    }
+  };
   useEffect(() => {
     if (debouncedSearchTerm) {
-      const results = searchCharacters(debouncedSearchTerm);
+      const searchType =
+        searchTypeBtn.current.value === "1" ? "number" : "title";
+      const results = searchCharacters(searchType, debouncedSearchTerm);
       if (!results.length) {
         setIsSearchResults(true);
       } else {
-        setPastesToShow(results);
         setIsSearchResults(false);
+        setPastesToShow(results);
       }
     } else {
-      setPastesToShow(allPastes);
+      setPastesToShow([...allPastes]);
     }
   }, [debouncedSearchTerm]);
 
@@ -42,6 +59,16 @@ export default function SearchBar() {
           aria-label="Large"
           aria-describedby="inputGroup-sizing-sm"
         />
+        <reactBts.Button
+          variant="primary"
+          size="sm"
+          className="SearchBar-btn"
+          ref={searchTypeBtn}
+          onClick={changeSearchType}
+          value={0}
+        >
+          By #Number
+        </reactBts.Button>
       </reactBts.InputGroup>
     </div>
   );

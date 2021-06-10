@@ -11,7 +11,6 @@ import {
   BarChart,
   Bar,
   ReferenceLine,
-  ResponsiveContainer,
 } from "recharts";
 
 export default function Chart({ chartsData }) {

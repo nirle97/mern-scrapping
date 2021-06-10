@@ -1,4 +1,22 @@
+.SearchBar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5vh;
+}
 .SearchBar-input {
   margin-bottom: 10vh;
   width: 35vw;
+  margin-right: 10px;
+}
+.SearchBar-btn {
+  max-height: 4.6vh;
+  color: rgb(12, 102, 233);
+  background-color: white;
+  border: 1px solid rgb(12, 102, 233);
+}
+#SearchBar-btn {
+  color: rgb(12, 102, 233);
+  background-color: white;
+  border: 1px solid rgb(12, 102, 233);
 }

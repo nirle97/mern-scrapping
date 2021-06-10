@@ -29,7 +29,7 @@ function App() {
 
   useEffect(async () => {
     await getPastesData();
-  }, [allPastes]);
+  }, []);
 
   return (
     <>
