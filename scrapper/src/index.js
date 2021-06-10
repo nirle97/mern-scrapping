@@ -17,7 +17,6 @@ mongoose
   .catch((error) => {
     console.log("error connecting scrapper to MongoDB:", error.message);
   });
-
 schedule.scheduleJob("*/120 * * * * *", function () {
   console.log("Gathering Pastes..");
   savePastes();

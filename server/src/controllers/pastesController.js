@@ -1,4 +1,4 @@
-const PasteModel = require("../db/models/mongo");
+const { PasteModel } = require("../db/models/mongo");
 
 exports.getPastes = (req, res) => {
   PasteModel.find()

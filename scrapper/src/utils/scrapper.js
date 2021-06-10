@@ -49,15 +49,22 @@ async function getPastes() {
 exports.savePastes = async () => {
   try {
     const dbData = await getPastes();
+    let newPastes = 0;
     for (let paste of dbData) {
-      const exists = await PasteModel.createIfNotExistsByDate(
+      const isExist = await PasteModel.createIfNotExistsByDate(
         paste,
         paste.date
       );
-      if (exists) break;
+      if (isExist) {
+        break;
+      } else {
+        newPastes++;
+      }
     }
-    console.log("new pastes were inserted to database");
+    if (newPastes === 0) return console.log("No New Pastes Were Found");
+    console.log(`${newPastes} new pastes were inserted to database`);
   } catch (e) {
+    console.log(e);
     console.error(e.message);
   }
 };

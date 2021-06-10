@@ -19,15 +19,15 @@ const pastesSchema = new mongoose.Schema({
 
 const PasteModel = mongoose.model("PasteModel", pastesSchema);
 
-const createIfNotExistsByDate = async (document, documentDate) => {
-  PasteModel.exists({ date: documentDate }, function (err, exists) {
+const createIfNotExistsByDate = async (doc, docDate) => {
+  return PasteModel.countDocuments({ date: docDate }, (err, count) => {
     if (err) return console.error(err.message);
-    if (!exists) {
-      PasteModel.create(document)
+    if (count === 0) {
+      PasteModel.create(doc)
         .then(() => console.log("paste added to mongodb"))
         .catch((e) => console.error(e.message));
     } else {
-      return false;
+      return true;
     }
   });
 };
