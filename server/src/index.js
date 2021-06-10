@@ -5,15 +5,9 @@ const io = require("socket.io")(server, { cors: { origin: "*" } });
 const pastes = require("./routes/pastes");
 const analytics = require("./routes/analytics");
 const mongoose = require("mongoose");
-app.use("/pastes", pastes);
-app.use("/analytics", analytics);
-
-app.get("/", (req, res) => {
-  res.send("hello");
-});
 
 mongoose
-  .connect("mongodb://mongodb:27017/pastes", {
+  .connect("mongodb://localhost:27017/pastes", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
@@ -33,6 +27,8 @@ io.on("connection", (socket) => {
     console.log(data);
   });
 });
+app.use("/pastes", pastes);
+app.use("/analytics", analytics);
 
 server.listen(8080, () => console.log("app is listening on port 8080"));
 

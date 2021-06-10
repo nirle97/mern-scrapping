@@ -2,7 +2,7 @@
   "name": "scrapper",
   "version": "1.0.0",
   "description": "",
-  "main": "scrapper.js",
+  "main": "index.js",
   "scripts": {
     "dev": "nodemon -L ./src/index.js"
   },
