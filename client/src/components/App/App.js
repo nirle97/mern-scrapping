@@ -9,7 +9,7 @@ import { AppContext } from "../../AppContext";
 const baseUrl = "http://localhost:8080";
 function App() {
   const { pastesContext } = useContext(AppContext);
-  const [, setAllPastes] = pastesContext.fetchedPasted;
+  const [allPastes, setAllPastes] = pastesContext.fetchedPasted;
   const [, setPastesToShow] = pastesContext.toShowPastes;
   const [chartsData, setChartsData] = useState({});
   const [loading, setLoading] = useState(true);
@@ -29,12 +29,7 @@ function App() {
 
   useEffect(async () => {
     await getPastesData();
-    const interavl = setInterval(() => {
-      console.log("Fetching Pastes");
-      getPastesData();
-    }, 86400);
-    return () => clearInterval(interavl);
-  }, []);
+  }, [allPastes]);
 
   return (
     <>
@@ -45,6 +40,7 @@ function App() {
       ) : (
         <div className="App">
           <>
+            <h1>The Scrapper's Analyzes</h1>
             <Alert />
             <Chart chartsData={chartsData} />
             <SearchBar />

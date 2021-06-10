@@ -1,0 +1,44 @@
+.Alert-container {
+  position: relative;
+  left: 40vw;
+  cursor: pointer;
+}
+.Alert-bell {
+  color: white;
+  font-size: calc(1em + 1vw);
+}
+.Alert-no-alerts {
+  margin-left: 15px;
+  padding: 15px;
+  color: white;
+  font-size: 20px;
+  cursor: default;
+}
+.Alert-alert-div {
+  height: 5vh;
+  background-color: white;
+  border: 1px solid grey;
+  padding: 8px;
+}
+
+#pastes-num {
+  margin: 0 8px;
+}
+#pastes-X {
+  color: red;
+}
+.Table-alerts-num {
+  display: inline-block;
+  color: white;
+  margin: 10px;
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  background-color: rgb(237, 73, 86);
+  text-align: center;
+}
+h1 {
+  font-family: Fantasy;
+  word-spacing: 9px;
+  color: rgba(255, 255, 255, 0.7);
+}

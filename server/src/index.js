@@ -7,7 +7,7 @@ const analytics = require("./routes/analytics");
 const mongoose = require("mongoose");
 
 mongoose
-  .connect("mongodb://mongodb:27017/pastes", {
+  .connect("mongodb://localhost:27017/pastes", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
@@ -21,10 +21,8 @@ mongoose
   });
 
 io.on("connection", (socket) => {
-  console.log("user connected: " + socket.id);
-  socket.emit("pasteAlert", "ALERT!!!");
-  socket.on("test", (data) => {
-    console.log(data);
+  socket.on("newPastes", (newPastes) => {
+    socket.broadcast.emit("pasteAlert", newPastes);
   });
 });
 app.use("/pastes", pastes);

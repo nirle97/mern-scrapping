@@ -2,6 +2,9 @@ const puppeteer = require("puppeteer");
 const cheerio = require("cheerio");
 const PasteModel = require("../db/models/mongo");
 const Pastes = require("./pasteClass");
+const socketClient = require("socket.io-client");
+const baseUrl = "http://localhost:8080";
+const socket = socketClient(baseUrl);
 
 async function getPastes() {
   const browser = await puppeteer.launch({
@@ -49,22 +52,22 @@ async function getPastes() {
 exports.savePastes = async () => {
   try {
     const dbData = await getPastes();
-    let newPastes = 0;
+    let newPastes = [];
     for (let paste of dbData) {
-      const isExist = await PasteModel.createIfNotExistsByDate(
+      const isNewPaste = await PasteModel.createIfNotExistsByDate(
         paste,
         paste.date
       );
-      if (isExist) {
+      if (!isNewPaste) {
         break;
       } else {
-        newPastes++;
+        newPastes.push(isNewPaste);
       }
     }
-    if (newPastes === 0) return console.log("No New Pastes Were Found");
-    console.log(`${newPastes} new pastes were inserted to database`);
+    if (!newPastes.length) return console.log("No New Pastes Were Found");
+    socket.emit("newPastes", newPastes);
+    console.log(`${newPastes.length} new pastes were inserted to database`);
   } catch (e) {
-    console.log(e);
     console.error(e.message);
   }
 };
