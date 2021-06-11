@@ -14,11 +14,18 @@ function App() {
   const [chartsData, setChartsData] = useState({});
   const [loading, setLoading] = useState(true);
 
+  function addSerialNumber(pastes) {
+    for (let i = 0; i < pastes.length; i++) {
+      pastes[i].number = i + 1;
+    }
+    return pastes;
+  }
+
   const getPastesData = async () => {
     try {
       const { data: pastes } = await axios.get(`${baseUrl}/pastes`);
-      setAllPastes(pastes);
-      setPastesToShow(pastes);
+      setAllPastes([...addSerialNumber(pastes)]);
+      setPastesToShow([...[...addSerialNumber(pastes)]]);
       const { data: analyticsData } = await axios.get(`${baseUrl}/analytics`);
       setChartsData(analyticsData);
       setLoading(false);

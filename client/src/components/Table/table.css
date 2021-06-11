@@ -24,7 +24,7 @@
 .Table-table thead {
   color: rgb(144, 202, 249);
 }
-.Table-show-more-btn {
+#Table-show-more-btn {
   margin-right: 1vw;
 }
 .Table-show-all-btn {

@@ -11,6 +11,7 @@ function Table() {
   const [pastesToShow, setPastesToShow] = pastesContext.toShowPastes;
 
   const showMorePastes = (e) => {
+    console.log(12);
     if (numberOfPastesToShow >= pastesToShow.length) {
       e.target.disabled = true;
       return;
@@ -38,7 +39,7 @@ function Table() {
               <tbody>
                 {pastesToShow.map((paste, i) => {
                   if (i < numberOfPastesToShow) {
-                    return <Paste key={i} paste={paste} index={i + 1} />;
+                    return <Paste key={i} paste={paste} />;
                   }
                 })}
               </tbody>
@@ -48,7 +49,8 @@ function Table() {
             <reactBts.Button
               variant="primary"
               size="sm"
-              className="Table-show-more-btn"
+              id="Table-show-more-btn"
+              disabled={false}
               onClick={(e) => showMorePastes(e)}
             >
               show more...

@@ -3,7 +3,7 @@ const { savePastes } = require("./utils/scrapper");
 const schedule = require("node-schedule");
 
 mongoose
-  .connect("mongodb://localhost:27017/pastes", {
+  .connect("mongodb://mongodb:27017/pastes", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,

@@ -15,10 +15,9 @@ export default function SearchBar() {
   const searchCharacters = (type, text) => {
     return [...pastesToShow].filter((paste) => {
       if (type === "number") {
-        console.log(paste.number);
-        if (paste.number === text) return true;
+        if (paste.number === Number(text)) return true;
       } else {
-        paste.title.toLowerCase().includes(text);
+        return paste.title.toLowerCase().includes(text);
       }
     });
   };
