@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import socketClient from "socket.io-client";
+import axios from "axios";
 import "./alert.css";
 import { AppContext } from "../../AppContext";
 const baseUrl = "http://localhost:8080";
@@ -8,6 +9,7 @@ export default function Alert() {
   const { pastesContext } = useContext(AppContext);
   const [pastesToShow, setPastesToShow] = pastesContext.toShowPastes;
   const [allPastes, setAllPastes] = pastesContext.fetchedPasted;
+  const [chartsData, setChartsData] = pastesContext.charts;
   const [alerts, setAlerts] = useState([]);
   const [showAlerts, setShowAlerts] = useState(false);
   const [newAlertSign, setNewAlertSign] = useState(false);
@@ -16,9 +18,12 @@ export default function Alert() {
     socket.on("pasteAlert", (newPastes) => {
       setAllPastes([...allPastes, ...newPastes]);
       setPastesToShow([...pastesToShow, ...newPastes]);
+      axios.get(`${baseUrl}/analytics`).then((res) => setChartsData(res.data));
       setNewAlertSign(true);
       const alertObj = {
-        time: `${new Date().getHours()}:${new Date().getMinutes()}`,
+        time: `${new Date().getHours()}:${
+          (new Date().getMinutes() < 10 ? "0" : "") + new Date().getMinutes()
+        }`,
         numOfPastes: newPastes.length,
       };
       setAlerts([...alerts, alertObj]);
@@ -54,8 +59,8 @@ export default function Alert() {
           {!alerts.length ? (
             <span className="Alert-no-alerts">No New Alerts</span>
           ) : (
-            alerts.map((alert) => (
-              <div className="Alert-alert-div">
+            alerts.map((alert, i) => (
+              <div key={i} className="Alert-alert-div">
                 <span onClick={(e) => deleteAlert(e)} id="pastes-X">
                   <i className="fas fa-times-circle"></i>
                 </span>

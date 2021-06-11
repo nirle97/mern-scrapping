@@ -7,7 +7,7 @@ const analytics = require("./routes/analytics");
 const mongoose = require("mongoose");
 
 mongoose
-  .connect("mongodb://mongodb:27017/pastes", {
+  .connect("mongodb://localhost:27017/pastes", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,

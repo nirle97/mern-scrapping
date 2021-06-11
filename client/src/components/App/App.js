@@ -11,7 +11,7 @@ function App() {
   const { pastesContext } = useContext(AppContext);
   const [allPastes, setAllPastes] = pastesContext.fetchedPasted;
   const [, setPastesToShow] = pastesContext.toShowPastes;
-  const [chartsData, setChartsData] = useState({});
+  const [chartsData, setChartsData] = pastesContext.charts;
   const [loading, setLoading] = useState(true);
 
   function addSerialNumber(pastes) {
@@ -34,8 +34,9 @@ function App() {
     }
   };
 
-  useEffect(async () => {
-    await getPastesData();
+  useEffect(() => {
+    const asyncPastes = async () => await getPastesData();
+    asyncPastes();
   }, []);
 
   return (

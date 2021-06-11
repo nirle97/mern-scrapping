@@ -10,7 +10,7 @@ async function getPastes() {
   const browser = await puppeteer.launch({
     ignoreHTTPSErrors: true,
     args: [
-      "--proxy-server=socks5://host.docker.internal:9050",
+      "--proxy-server=socks5://localhost:9050",
       "--disable-setuid-sandbox",
       "--no-sandbox",
       "--link scrape-network:scrape-network",
