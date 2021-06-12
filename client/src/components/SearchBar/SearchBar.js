@@ -7,7 +7,7 @@ import "./searchBar.css";
 export default function SearchBar() {
   const { pastesContext, searchResults } = useContext(AppContext);
   const [pastesToShow, setPastesToShow] = pastesContext.toShowPastes;
-  const [allPastes, setAllPastes] = pastesContext.fetchedPasted;
+  const [allPastes] = pastesContext.fetchedPasted;
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounce(searchTerm, 1000);
   const [, setIsSearchResults] = searchResults;
@@ -15,7 +15,7 @@ export default function SearchBar() {
   const searchCharacters = (type, text) => {
     return [...pastesToShow].filter((paste) => {
       if (type === "number") {
-        if (paste.number === Number(text)) return true;
+        return paste.number === Number(text);
       } else {
         return paste.title.toLowerCase().includes(text);
       }

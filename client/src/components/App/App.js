@@ -25,7 +25,6 @@ export function App() {
     try {
       const { data: pastes } = await axios.get(`${baseUrl}/pastes`);
       setAllPastes([...addSerialNumber(pastes)]);
-      console.log(addSerialNumber(pastes));
       setPastesToShow([...[...addSerialNumber(pastes)]]);
       const { data: analyticsData } = await axios.get(`${baseUrl}/analytics`);
       setChartsData(analyticsData);

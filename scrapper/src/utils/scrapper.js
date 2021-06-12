@@ -3,14 +3,14 @@ const cheerio = require("cheerio");
 const PasteModel = require("../db/models/mongo");
 const Pastes = require("./pasteClass");
 const socketClient = require("socket.io-client");
-const baseUrl = "http://localhost:8080";
+const baseUrl = "ws://host.docker.internal:8080";
 const socket = socketClient(baseUrl);
 
 async function getPastes() {
   const browser = await puppeteer.launch({
     ignoreHTTPSErrors: true,
     args: [
-      "--proxy-server=socks5://localhost:9050",
+      "--proxy-server=socks5://host.docker.internal:9050",
       "--disable-setuid-sandbox",
       "--no-sandbox",
       "--link scrape-network:scrape-network",

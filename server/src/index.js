@@ -1,13 +1,15 @@
 const express = require("express");
 const app = express();
 const server = require("http").createServer(app);
-const io = require("socket.io")(server, { cors: { origin: "*" } });
+const io = require("socket.io")(server, {
+  cors: { origin: "*", methods: ["GET", "POST"] },
+});
 const pastes = require("./routes/pastes");
 const analytics = require("./routes/analytics");
 const mongoose = require("mongoose");
 
 mongoose
-  .connect("mongodb://localhost:27017/pastes", {
+  .connect("mongodb://mongodb:27017/pastes", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
@@ -21,7 +23,10 @@ mongoose
   });
 
 io.on("connection", (socket) => {
+  console.log("user connected");
+  console.log(socket.id);
   socket.on("newPastes", (newPastes) => {
+    console.log("new Pastes");
     socket.broadcast.emit("pasteAlert", newPastes);
   });
 });

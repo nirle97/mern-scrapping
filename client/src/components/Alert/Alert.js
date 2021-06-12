@@ -14,9 +14,13 @@ export default function Alert() {
   const [alerts, setAlerts] = useState([]);
   const [showAlerts, setShowAlerts] = useState(false);
   const [newAlertSign, setNewAlertSign] = useState(false);
+
   useEffect(() => {
-    const socket = socketClient(baseUrl);
+    const socket = socketClient(baseUrl, {
+      transports: ["websocket"],
+    });
     socket.on("pasteAlert", (newPastes) => {
+      console.log(newPastes);
       const newPastesWithNumbers = addSerialNumber(newPastes);
       setAllPastes([...allPastes, ...newPastesWithNumbers]);
       setPastesToShow([...pastesToShow, ...newPastesWithNumbers]);
@@ -30,8 +34,7 @@ export default function Alert() {
       };
       setAlerts([...alerts, alertObj]);
     });
-    return () => socket.disconnect();
-  }, []);
+  });
 
   const openAlertsBell = () => {
     setShowAlerts((prev) => !prev);
