@@ -7,24 +7,25 @@ import Alert from "../Alert/Alert";
 import axios from "axios";
 import { AppContext } from "../../AppContext";
 const baseUrl = "http://localhost:8080";
-function App() {
+
+export function addSerialNumber(pastes) {
+  for (let i = 0; i < pastes.length; i++) {
+    pastes[i].number = i + 1;
+  }
+  return pastes;
+}
+export function App() {
   const { pastesContext } = useContext(AppContext);
-  const [allPastes, setAllPastes] = pastesContext.fetchedPasted;
+  const [, setAllPastes] = pastesContext.fetchedPasted;
   const [, setPastesToShow] = pastesContext.toShowPastes;
   const [chartsData, setChartsData] = pastesContext.charts;
   const [loading, setLoading] = useState(true);
-
-  function addSerialNumber(pastes) {
-    for (let i = 0; i < pastes.length; i++) {
-      pastes[i].number = i + 1;
-    }
-    return pastes;
-  }
 
   const getPastesData = async () => {
     try {
       const { data: pastes } = await axios.get(`${baseUrl}/pastes`);
       setAllPastes([...addSerialNumber(pastes)]);
+      console.log(addSerialNumber(pastes));
       setPastesToShow([...[...addSerialNumber(pastes)]]);
       const { data: analyticsData } = await axios.get(`${baseUrl}/analytics`);
       setChartsData(analyticsData);
@@ -60,4 +61,4 @@ function App() {
   );
 }
 
-export default App;
+// export default App;

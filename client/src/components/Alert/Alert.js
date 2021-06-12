@@ -3,21 +3,23 @@ import socketClient from "socket.io-client";
 import axios from "axios";
 import "./alert.css";
 import { AppContext } from "../../AppContext";
+import { addSerialNumber } from "../App/App";
 const baseUrl = "http://localhost:8080";
 
 export default function Alert() {
   const { pastesContext } = useContext(AppContext);
   const [pastesToShow, setPastesToShow] = pastesContext.toShowPastes;
   const [allPastes, setAllPastes] = pastesContext.fetchedPasted;
-  const [chartsData, setChartsData] = pastesContext.charts;
+  const [, setChartsData] = pastesContext.charts;
   const [alerts, setAlerts] = useState([]);
   const [showAlerts, setShowAlerts] = useState(false);
   const [newAlertSign, setNewAlertSign] = useState(false);
   useEffect(() => {
     const socket = socketClient(baseUrl);
     socket.on("pasteAlert", (newPastes) => {
-      setAllPastes([...allPastes, ...newPastes]);
-      setPastesToShow([...pastesToShow, ...newPastes]);
+      const newPastesWithNumbers = addSerialNumber(newPastes);
+      setAllPastes([...allPastes, ...newPastesWithNumbers]);
+      setPastesToShow([...pastesToShow, ...newPastesWithNumbers]);
       axios.get(`${baseUrl}/analytics`).then((res) => setChartsData(res.data));
       setNewAlertSign(true);
       const alertObj = {
