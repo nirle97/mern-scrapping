@@ -23,3 +23,5 @@ There are 5 services running together in a docker-compose:
 
 Main Technologies:
 `Nodejs, React, Express, MongoDB, Socket.io, Puppeteer, Docker-Compose`
+
+<img src="./scrape.jpg"/>
