@@ -13,6 +13,13 @@ There is an alarm system to alert the user everytime a new information has arriv
   - ii A sentiment score given to each paste according to the negativity of the paste's content.
 There is a debounce search to easy navigate and find a specifc paste.
 
+Docker:
+There are 5 services running together in a docker-compose:
+- client
+- server
+- mongodb
+- scrapper
+- tor proxy
 
 Main Technologies:
-`Nodejs, React, Express, MongoDB, Socket.io, Puppeteer`
+`Nodejs, React, Express, MongoDB, Socket.io, Puppeteer, Docker-Compose`
